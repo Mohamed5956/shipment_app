@@ -13,9 +13,9 @@ This is a Laravel-based shipment management system that allows users to create, 
 
 ## Prerequisites
 
-- PHP >= 7.4
+- PHP >= 8.2
 - Composer
-- Laravel 8.x
+- Laravel 11.x
 - MySQL
 
 ## Installation

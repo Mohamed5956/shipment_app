@@ -70,7 +70,9 @@ php artisan migrate
 
 ```bash
 php artisan serve
+npm run dev
 ```
+
 
 You can now access the application at `http://localhost:8000`.
 
@@ -103,10 +105,6 @@ You can now access the application at `http://localhost:8000`.
 
 If you would like to contribute to this project, please fork the repository and submit a pull request.
 
-## License
-
-This project is open-source and available under the [MIT License](LICENSE).
-
 ## Contact
 
-For any questions or feedback, please contact [your-email@example.com](mailto:your-email@example.com).
+For any questions or feedback, please contact [mohammeadell301@gmail.com](mailto:mohammedadell301@gmail.com).

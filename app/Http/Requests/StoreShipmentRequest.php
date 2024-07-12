@@ -25,7 +25,7 @@ class StoreShipmentRequest extends FormRequest
             'code' => 'required|unique:shipments',
             'shipper' => 'required',
             'image' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
-            'weight' => 'required|numeric',
+            'weight' => 'required|numeric|min:0',
             'description' => 'nullable',
             'status' => 'required|in:Pending,Progress,Done',
         ];

@@ -11,9 +11,15 @@ use Illuminate\Support\Facades\Storage;
 
 class ShipmentController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $shipments = Shipment::all();
+        $query = Shipment::query();
+
+        if ($request->has('status') && $request->status != '') {
+            $query->where('status', $request->status);
+        }
+        $shipments = $query->get()->groupBy('shipper');
+
         return view('shipments.index', compact('shipments'));
     }
 

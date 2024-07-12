@@ -8,7 +8,10 @@ class Shipment extends Model
     protected $fillable = [
         'code', 'shipper', 'image', 'weight', 'description', 'status', 'price'
     ];
-
+    public function journalEntries()
+    {
+        return $this->hasMany(JournalEntry::class);
+    }
     protected static function boot()
     {
         parent::boot();

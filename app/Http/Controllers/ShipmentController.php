@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreShipmentRequest;
 use App\Http\Requests\UpdateShipmentRequest;
+use App\Models\JournalEntry;
 use App\Models\Shipment;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
@@ -31,7 +32,11 @@ class ShipmentController extends Controller
                 $validated['image'] = $request->file('image')->store('images', 'public');
             }
 
-            Shipment::create($validated);
+            $shipment = Shipment::create($validated);
+
+            if ($validated['status'] == 'Done') {
+                $this->createJournalEntries($shipment);
+            }
 
             return redirect()->route('shipments.index')->with('success', 'Shipment created successfully.');
         } catch (\Exception $e) {
@@ -53,14 +58,18 @@ class ShipmentController extends Controller
     {
         try {
             $validated = $request->validated();
+            if ($shipment->status === 'Done') {
+                return redirect()->route('shipments.index')->withErrors(['error' => 'Shipment cannot be updated once it is marked as Done.']);
+            }
 
-            // Handle the image upload
             if ($request->hasFile('image')) {
                 $validated['image'] = $request->file('image')->store('images', 'public');
             }
 
-            // Update the shipment attributes
             $shipment->update($validated);
+            if ($validated['status'] == 'Done') {
+                $this->createJournalEntries($shipment);
+            }
 
             return redirect()->route('shipments.index')->with('success', 'Shipment updated successfully.');
         } catch (\Exception $e) {
@@ -75,5 +84,22 @@ class ShipmentController extends Controller
         }
         $shipment->delete();
         return redirect()->route('shipments.index');
+    }
+
+    private function createJournalEntries($shipment)
+    {
+        $price = $shipment->price;
+        $entries = [
+            ['type' => 'Debit Cash', 'amount' => $price],
+            ['type' => 'Credit Revenue', 'amount' => $price * 0.2],
+            ['type' => 'Credit Payable', 'amount' => $price * 0.8]
+        ];
+        foreach ($entries as $entry) {
+            JournalEntry::create([
+                'shipment_id' => $shipment->id,
+                'type' => $entry['type'],
+                'amount' => $entry['amount']
+            ]);
+        }
     }
 }

@@ -25,7 +25,9 @@
                     <td>{{ $shipment->status }}</td>
                     <td>
                         <a href="{{ route('shipments.show', $shipment) }}" class="btn btn-info">View</a>
-                        <a href="{{ route('shipments.edit', $shipment) }}" class="btn btn-warning">Edit</a>
+                        @if($shipment->status != 'Done')
+                            <a href="{{ route('shipments.edit', $shipment) }}" class="btn btn-warning">Edit</a>
+                        @endif
                         <form action="{{ route('shipments.destroy', $shipment) }}" method="POST" style="display:inline-block;">
                             @csrf
                             @method('DELETE')
